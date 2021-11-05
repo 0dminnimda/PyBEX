@@ -1,10 +1,11 @@
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
-from .classes import EvalContext, Funcall, Expr, Nothing, Number, Program, String, Unfinished, Word, Function
-from .parser import parse_source
-from . import __version__
-from dataclasses import dataclass
-import traceback
 import sys
+import traceback
+from typing import Any, Callable, List, Optional, Tuple
+
+from . import __version__
+from .classes import (EvalContext, Expr, Funcall, Function, Nothing, Number,
+                      Program, Unfinished, Word)
+from .parser import parse_source
 
 
 def eval_word(ctx: EvalContext, expr: Word) -> Any:

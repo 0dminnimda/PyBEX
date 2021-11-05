@@ -1,10 +1,9 @@
-import os
-from typing_extensions import Literal
-from lark import Lark, Transformer
 import ast
-
-from .classes import Funcall, Number, Program, String, Word, Unfinished
 from dataclasses import dataclass
+
+from lark import Lark, Transformer
+
+from .classes import Funcall, Number, Program, String, Unfinished, Word
 
 
 @dataclass
@@ -52,7 +51,7 @@ _parser = Lark.open(
     # priority="invert"
     # debug=True,
     # propagate_positions=True,
-    )
+)
 # with open(os.path.join(os.path.dirname(__file__), )) as f:
 #     PARSER = Lark(f)
 #     del f
