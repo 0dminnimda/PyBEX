@@ -1,5 +1,3 @@
-start: expr*
-
 // number
 SIGN: "+" | "-"
 DIGIT: "0".."9"
@@ -23,6 +21,8 @@ STRING: /"""/      /[\w\W]*?/ NOT_ESCAPE       /"""/
       | /(?!""")"/ /[^\n]*?/  NOT_ESCAPE /"(?<!""")/
       | /(?!''')'/ /[^\n]*?/  NOT_ESCAPE /'(?<!''')/
 
+UNFINISHED_STRING: /"""[\w\W]*/ | /'''[\w\W]*/
+
 // words
 WORD: /\b\w+\b/
 
@@ -30,14 +30,21 @@ WORD: /\b\w+\b/
 _FIRST_BRACKET: /(?<! )\(/  // to remove this from ast
 _funcall: WORD _FIRST_BRACKET [expr ("," expr)*] ","? ")"  // _ because we need pretty ast
 
+_unfinished_call: WORD _FIRST_BRACKET [expr ("," expr)*] ","?
+
 // grouping (x) == x
 // group: "(" expr ")"
 
-expr: INT      -> int
-    | FLOAT    -> float
-    | STRING   -> string
-    | _funcall -> funcall
-    | WORD     -> word
+expr: INT               -> int
+    | FLOAT             -> float
+    | STRING            -> string
+    | UNFINISHED_STRING -> unfinished_string
+    | _funcall          -> funcall
+    | _unfinished_call  -> unfinished_call
+    | WORD              -> word
+
+single_input: expr?
+exec_input: expr*
 
 %import common (WS)
 
