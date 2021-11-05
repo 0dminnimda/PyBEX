@@ -1,0 +1,45 @@
+start: expr*
+
+// number
+SIGN: "+" | "-"
+DIGIT: "0".."9"
+
+UNSIGNED_INT: DIGIT ("_"? DIGIT)*
+INT: SIGN? UNSIGNED_INT
+
+_EXP: ("e"|"E") INT
+DECIMAL: UNSIGNED_INT "." UNSIGNED_INT? | "." UNSIGNED_INT
+UNSIGNED_FLOAT: UNSIGNED_INT _EXP | DECIMAL _EXP?
+FLOAT: SIGN? UNSIGNED_FLOAT
+
+// UNSIGNED_NUMBER: UNSIGNED_FLOAT | UNSIGNED_INT
+// NUMBER: SIGN? UNSIGNED_NUMBER
+
+// strings
+NOT_ESCAPE: /(?<!\\)(\\\\)*?/
+
+STRING: /"""/      /[\w\W]*?/ NOT_ESCAPE       /"""/
+      | /'''/      /[\w\W]*?/ NOT_ESCAPE       /'''/
+      | /(?!""")"/ /[^\n]*?/  NOT_ESCAPE /"(?<!""")/
+      | /(?!''')'/ /[^\n]*?/  NOT_ESCAPE /'(?<!''')/
+
+// words
+WORD: /\b\w+\b/
+
+// funcalls
+_FIRST_BRACKET: /(?<! )\(/  // to remove this from ast
+_funcall: WORD _FIRST_BRACKET [expr ("," expr)*] ","? ")"  // _ because we need pretty ast
+
+// grouping (x) == x
+// group: "(" expr ")"
+
+expr: INT      -> int
+    | FLOAT    -> float
+    | STRING   -> string
+    | _funcall -> funcall
+    | WORD     -> word
+
+%import common (WS)
+
+%ignore WS
+%ignore /#[^\n]*/
