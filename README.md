@@ -8,13 +8,27 @@ A simple Interpreted Dynamic Programming Language for describing chat bot comman
 
 ```
 "Hello, World"
+
+'single or double - doesn\'t matter'
+
+"""multiline
+ones"""
+
+'''are
+supported'''
 ```
 
-### Integer
+### Number
 
 ```
+# integers
 69
 420
+1_000_000  # 1000000
+
+# and floats
+3.1415
+5e-10
 ```
 
 ### Variable
@@ -22,6 +36,7 @@ A simple Interpreted Dynamic Programming Language for describing chat bot comman
 ```
 args
 sender
+_underscore
 ```
 
 ### Funcalls
@@ -29,8 +44,19 @@ sender
 ```
 f()
 f(g())
-f(69, 420)
-f("hello, world")
+f(69, 420, 3.1415)
+f("can take in any other element")
 ```
 
-[Original implementation in Go](https://gitlab.com/tsoding/bex)
+## Interactive mode
+
+```
+bex> say(99,
+ ... "bottles of beer",
+ ... "on the wall.")
+99 bottles of beer on the wall.
+bex> if(1, "pi", 3.1415)
+'pi'
+```
+
+[Inspiration for the project](https://gitlab.com/tsoding/bex)
