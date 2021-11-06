@@ -1,13 +1,45 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import partial
-from typing import Callable, Dict, List, Type, TypeVar, Union
+from typing import Callable, Dict, List, Optional, Type, TypeVar, Union
 
 
 # Interpretation
 
 @dataclass
+class Scope:
+    namespace: Dict[str, "Expr"] = field(
+        default_factory=dict)
+
+    def update_by_scope(self, scope: "Scope") -> None:
+        self.namespace.update(scope.namespace)
+
+
 class EvalContext:
-    namespase: Dict[str, Union["Function", object]]
+    scopes: List[Scope]
+    last_funcall: Optional["Funcall"]
+
+    def __init__(self, scope: Optional[Scope] = None):
+        if scope is None:
+            scope = Scope()
+        self.scopes = [scope]
+        self.last_funcall = None
+
+    @property
+    def scope(self) -> Scope:
+        return self.scopes[-1]
+
+    def add_scope(self, scope: Scope) -> None:
+        self.scopes.append(scope)
+
+    def add_new_scope(self) -> None:
+        self.add_scope(Scope())
+
+    def pop_scope(self) -> None:
+        if len(self.scopes) == 0:
+            raise RuntimeError("Cannot removethe only one last scope, "
+                               "there always should be at least one left")
+
+        del self.scopes[-1]
 
 
 # AST
@@ -86,7 +118,7 @@ class Function(Expr):
         return self._func(ctx, exprs)
 
     def __repr__(self):
-        return f"Function<{self._func.__name__}>"
+        return f"Function(name={self.name!r})"
 
 
 # AST/code Constants
