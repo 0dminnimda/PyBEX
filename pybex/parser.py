@@ -77,6 +77,6 @@ def parse_source(source: str, mode: str = "exec") -> Program:
     return _parser.parse(source, start=start)  # type: ignore
 
 
-def parse_file(path: str, mode: str = "exec") -> Program:
-    with open(path) as f:
-        return parse_source(f.read(), mode)
+# def parse_file(path: str, mode: str = "exec") -> Program:
+#     with open(path) as f:
+#         return parse_source(f.read(), mode)
