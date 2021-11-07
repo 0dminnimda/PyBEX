@@ -1,5 +1,8 @@
+from typing import List
+
 from pybex import EvalContext, Scope, interpret, parse_source
-from pybex.classes import Function
+from pybex.classes import Expr, Function
+
 
 program_body = """bex code"""
 
