@@ -1,0 +1,12 @@
+if(
+    int(input()),
+    exec(
+        assign(f, 1),
+        say("non-zero input")
+    ),
+    exec(
+        assign(f, 0),
+        say("zero input")
+    ))
+
+say(f)
