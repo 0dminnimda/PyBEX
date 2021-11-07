@@ -54,7 +54,7 @@ def assert_arg_type(ctx: EvalContext, arg: Expr,
         raise TypeError(f"argument number {ind + 1} for "
                         f"`{ctx.last_funcall.name}` "
                         + txt.format(type=type_) +
-                        f" but found {type(arg).__name__}")
+                        f" but found '{type(arg).__name__}'")
         # f"must be a {type.__name__}")
 
     return arg  # so type checkers can be work properly
