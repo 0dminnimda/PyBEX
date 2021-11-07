@@ -1,4 +1,4 @@
-from typing import List, NoReturn
+from typing import List, NoReturn, Set
 
 from .classes import (EvalContext, Expr, Funcall, Function, Nothing, Number,
                       Scope, String, Word)
@@ -90,8 +90,13 @@ def valueof(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     # if len(exprs) != 1:
     #     raise ValueError("`valueof` takes in exactly one argument")
 
+    cache: Set[str] = set()
     value = exprs[0]
     while isinstance(value, Word):
+        if value.value in cache:
+            raise RecursionError("`valueof` encountered a reference cycle "
+                                 f"consisting of {cache}")
+        cache.add(value.value)
         value = eval_expr(ctx, value)
 
     return value
@@ -224,6 +229,26 @@ def repr_func(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     return String(repr(exprs[0]))
 
 
+@Function.named_py("int")
+def int_func(ctx: EvalContext, exprs: List[Expr]) -> Expr:
+    assert_args_amount(ctx, exprs, "==", 1)
+
+    arg1 = exprs[0]
+    if isinstance(arg1, Funcall):
+        arg1 = eval_funcall(ctx, arg1)
+
+    arg1 = valueof(ctx, [arg1])
+
+    if isinstance(arg1, (String, Number)):
+        return Number(int(arg1.value))
+    if arg1 is Nothing:
+        return Number(0)
+
+    raise TypeError(
+        "int() argument must be a String, Nothing "
+        f"or a Number, not '{type(arg1).__name__}'")
+
+
 builtin_scope = Scope({
     say.name: say,
     if_func.name: if_func,
@@ -240,4 +265,5 @@ builtin_scope = Scope({
     exec_func.name: exec_func,
     input_func.name: input_func,
     repr_func.name: repr_func,
+    int_func.name: int_func,
 })
