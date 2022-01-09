@@ -12,10 +12,10 @@ from .parser import parse_source
 
 
 def make_ctx_with_builtins(ctx: EvalContext) -> EvalContext:
-    ctx = EvalContext()
-    ctx.scope.update_by_scope(builtin_scope)
-    ctx.scope.update_by_scope(ctx.scope)
-    return ctx
+    new_ctx = EvalContext()
+    new_ctx.scope.update_by_scope(builtin_scope)
+    new_ctx.scope.update_by_scope(ctx.scope)
+    return new_ctx
 
 
 def interpret(program: Program, ctx: EvalContext = EvalContext()):
