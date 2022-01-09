@@ -92,7 +92,7 @@ def call(ctx: EvalContext, exprs: List[Expr]) -> Expr:
                                "should evaluate to a '{type.__name__}'")
     else:
         arg1 = assert_arg_type(ctx, valueof(ctx, exprs[:1]), 0, Function)
-    return eval_expr(ctx, arg1(ctx, exprs[1:]))
+    return arg1(ctx, exprs[1:])
 
 
 @Function.named_py("eval")
