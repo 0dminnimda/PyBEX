@@ -27,7 +27,7 @@ def if_func(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     assert_args_amount(ctx, exprs, "==", 3)
 
     test = assert_arg_type(ctx, eval_expr(ctx, exprs[0]),
-                           0, Number, "should evaluate to a '{type.__name__}'")
+                           0, Number, "should evaluate to a `{type.__name__}`")
 
     ind = 1 + int(not test.value)  # True - 1, False - 2
     return eval_expr(ctx, exprs[ind])
