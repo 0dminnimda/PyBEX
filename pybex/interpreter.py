@@ -48,7 +48,7 @@ def assert_arg_type(ctx: EvalContext, arg: Expr,
     assert isinstance(ctx.last_funcall, Funcall)
 
     if txt is None:
-        txt = "must be a {type.__name__}"
+        txt = "must be a `{type.__name__}`"
 
     if not isinstance(arg, type_):
         raise TypeError(f"argument number {ind + 1} for "
