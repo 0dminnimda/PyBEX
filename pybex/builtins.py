@@ -67,12 +67,8 @@ def bex_add_args(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     return arg1
 
 
-@Function.py
-def bex_valueof(ctx: EvalContext, exprs: List[Expr]) -> Expr:
-    assert_args_amount(ctx, exprs, "==", 1)
-
+def valueof(ctx: EvalContext, value: Expr) -> Expr:
     cache: Set[str] = set()
-    value = exprs[0]
     while isinstance(value, Word):
         if value.value in cache:
             raise RecursionError("`valueof` encountered a reference cycle "
@@ -84,6 +80,12 @@ def bex_valueof(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 
 
 @Function.py
+def bex_valueof(ctx: EvalContext, exprs: List[Expr]) -> Expr:
+    assert_args_amount(ctx, exprs, "==", 1)
+    return valueof(ctx, exprs[0])
+
+
+@Function.py
 def bex_call(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     assert_args_amount(ctx, exprs, ">=", 1)
 
@@ -91,7 +93,7 @@ def bex_call(ctx: EvalContext, exprs: List[Expr]) -> Expr:
         arg1 = assert_arg_type(ctx, eval_funcall(ctx, exprs[0]), 0, Function,
                                "should evaluate to a '{type.__name__}'")
     else:
-        arg1 = assert_arg_type(ctx, valueof(ctx, exprs[:1]), 0, Function)
+        arg1 = assert_arg_type(ctx, valueof(ctx, exprs[0]), 0, Function)
     return arg1(ctx, exprs[1:])
 
 
@@ -183,7 +185,7 @@ def bex_int(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     if isinstance(arg1, Funcall):
         arg1 = eval_funcall(ctx, arg1)
 
-    arg1 = valueof(ctx, [arg1])
+    arg1 = valueof(ctx, arg1)
 
     if isinstance(arg1, (String, Number)):
         return Number(int(arg1.value))
