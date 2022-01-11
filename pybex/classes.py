@@ -13,6 +13,13 @@ class Scope:
     def update_by_scope(self, scope: "Scope") -> None:
         self.namespace.update(scope.namespace)
 
+    @classmethod
+    def from_funcions(cls, *funcions: "Function"):
+        return cls({
+            func.name: func
+            for func in funcions
+        })
+
 
 class EvalContext:
     scopes: List[Scope]
@@ -102,7 +109,7 @@ class Function(Expr):
 
     @classmethod
     def py(cls: Type[FuncT], func: PyFunctionT) -> FuncT:
-        return cls(func.__name__, func)
+        return cls(func.__name__[4:], func)
 
     # too dynamic for type checkers:
     # @classmethod
