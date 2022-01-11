@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Type, TypeVar
+from typing import Any, List, Optional, Type, TypeVar, NoReturn
 
 from .classes import EvalContext, Expr, Funcall, Function, Word
 
@@ -42,6 +42,15 @@ def assert_args_amount(ctx: EvalContext, args: List[Expr],
         raise ValueError(f"Unknown `action`: {action}")
 
 
+def raise_argument_error(number: int, funcname: str,
+                         message: str, found: str) -> NoReturn:
+    raise TypeError(
+        f"argument number {number} for "
+        f"`{funcname}` {message}"
+        f" but found `{found}`")
+    # f"must be a {type.__name__}")
+
+
 def assert_arg_type(ctx: EvalContext, arg: Expr,
                     ind: int, type_: Type[T],
                     txt: Optional[str] = None) -> T:
@@ -51,11 +60,11 @@ def assert_arg_type(ctx: EvalContext, arg: Expr,
         txt = "must be a `{type.__name__}`"
 
     if not isinstance(arg, type_):
-        raise TypeError(f"argument number {ind + 1} for "
-                        f"`{ctx.last_funcall.name}` "
-                        + txt.format(type=type_) +
-                        f" but found '{type(arg).__name__}'")
-        # f"must be a {type.__name__}")
+        raise_argument_error(
+            ind + 1,
+            ctx.last_funcall.name,
+            txt.format(type=type_),
+            type(arg).__name__)
 
     return arg  # so type checkers can be work properly
 
