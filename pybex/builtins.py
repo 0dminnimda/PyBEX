@@ -174,7 +174,7 @@ def bex_input(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 def bex_repr(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     assert_args_amount(ctx, exprs, "==", 1)
 
-    return String(repr(exprs[0]))
+    return String(repr(valueof(ctx, exprs[0])))
 
 
 @Function.py
