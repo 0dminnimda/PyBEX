@@ -229,20 +229,45 @@ def bex_int(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 def bex_add(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     assert_args_amount(ctx, exprs, "==", 2)
 
-    o1 = exprs[0]
-    if isinstance(o1, Number):
-        o2 = assert_arg_type(ctx, exprs[1], 1, Number)
-        return Number(o1.value + o2.value)
-    else:
-        raise_argument_error(
-            1,
-            ctx.last_funcall.name,
-            f"must be a `{Number.__name__}`",
-            type(o1).__name__)
+    o1 = eval_expr(ctx, exprs[0])
+    o1 = assert_arg_type(ctx, o1, 0, Number)
+
+    o2 = eval_expr(ctx, exprs[1])
+    o2 = assert_arg_type(ctx, o2, 1, Number)
+
+    return Number(o1.value + o2.value)
+
+
+@Function.py
+def bex_mul(ctx: EvalContext, exprs: List[Expr]) -> Expr:
+    assert_args_amount(ctx, exprs, "==", 2)
+
+    o1 = eval_expr(ctx, exprs[0])
+    o1 = assert_arg_type(ctx, o1, 0, Number)
+
+    o2 = eval_expr(ctx, exprs[1])
+    o2 = assert_arg_type(ctx, o2, 1, Number)
+
+    return Number(o1.value * o2.value)
+
+
+@Function.py
+def bex_less(ctx: EvalContext, exprs: List[Expr]) -> Expr:
+    assert_args_amount(ctx, exprs, "==", 2)
+
+    o1 = eval_expr(ctx, exprs[0])
+    o1 = assert_arg_type(ctx, o1, 0, Number)
+
+    o2 = eval_expr(ctx, exprs[1])
+    o2 = assert_arg_type(ctx, o2, 1, Number)
+
+    return Number(o1.value < o2.value)
 
 
 builtin_scope = Scope.from_funcions(
     bex_add,
+    bex_mul,
+    bex_less,
 
     bex_say,
     bex_if,
