@@ -1,0 +1,47 @@
+assign(do,
+    function(
+        args(a, b, c),
+        say(a),
+        say(b),
+        say(c)
+    )
+)
+
+say("You can call a function the usual way")
+do(1, 2, 3)
+
+say("... or in place")
+call(do, 1, 2, 3)
+
+assign(sum,
+    function(
+        args(a, b),
+        assign(s, add(a, b)),
+        say(s),
+    )
+)
+
+sum(5, 7)
+
+assign(factorial,
+    function(
+        args(eval(n)),
+        return(if(less(n, 1),
+            1,
+            mul(n, factorial(add(n, -1)))
+        ))
+    )
+) 
+
+say(factorial(5))
+
+assign(return_funcall,
+    function(
+        args(eval(func)),
+        func("inside!"),
+        return(this(func(5))),
+    )
+)
+
+say(return_funcall(say))
+# eval(return_funcall(say)) - kinda doesn't work
