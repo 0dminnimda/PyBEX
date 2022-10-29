@@ -115,3 +115,7 @@ dmypy.json
 
 # VSCode
 .vscode/
+
+# Project ignores - testing directories
+ex/
+testenv/
