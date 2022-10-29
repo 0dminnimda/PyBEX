@@ -23,20 +23,24 @@ T = TypeVar("T")
 
 
 def assert_args_amount(ctx: EvalContext, args: List[Expr],
-                       action: str, amount: int) -> None:
+                       action: str, amount: int,
+                       funcname: Optional[str] = None) -> None:
     assert isinstance(ctx.last_funcall, Funcall)
+
+    if funcname is None:
+        funcname = ctx.last_funcall.name
 
     if action == "==":
         if len(args) != amount:
-            raise ValueError(f"`{ctx.last_funcall.name}` takes in exactly "
+            raise ValueError(f"`{funcname}` takes in exactly "
                              f"{amount} argument(s) but provided {len(args)}")
     elif action == ">=":
         if len(args) < amount:
-            raise ValueError(f"`{ctx.last_funcall.name}` takes in at least "
+            raise ValueError(f"`{funcname}` takes in at least "
                              f"{amount} argument(s) but provided {len(args)}")
     elif action == "<=":
         if len(args) > amount:
-            raise ValueError(f"`{ctx.last_funcall.name}` takes in at most "
+            raise ValueError(f"`{funcname}` takes in at most "
                              f"{amount} argument(s) but provided {len(args)}")
     else:
         raise ValueError(f"Unknown `action`: {action}")
