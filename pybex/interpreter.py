@@ -55,6 +55,7 @@ def raise_argument_error(number: int, funcname: str,
     # f"must be a {type.__name__}")
 
 
+# TODO: accept multiple types
 def assert_arg_type(ctx: EvalContext, arg: Expr,
                     ind: int, type_: Type[T],
                     txt: Optional[str] = None) -> T:
