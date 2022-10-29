@@ -1,4 +1,4 @@
-from typing import List, NoReturn, Set
+from typing import List, NamedTuple, NoReturn, Set
 
 from .classes import (EvalContext, Expr, Funcall, Function, Nothing, Number,
                       Scope, String, Word)
@@ -119,23 +119,41 @@ def bex_assign(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     return arg2
 
 
+class Arg(NamedTuple):
+    name: str
+    evaluate: bool
+
+
+def make_args(ctx: EvalContext, args_func: Funcall) -> List[Arg]:
+    args = []
+    for ind, expr in enumerate(args_func.args):
+        funcall = False
+        if isinstance(expr, Funcall) and expr.name == bex_eval.name:
+            assert_args_amount(ctx, expr.args, "==", 1, bex_eval.name)
+            expr = expr.args[0]
+            funcall = True
+        args.append(Arg(assert_arg_type(ctx, expr, ind, Word).value, funcall))
+    return args
+
+
 @Function.py
 def bex_function(ctx: EvalContext, func_body: List[Expr]) -> Expr:
     assert_args_amount(ctx, func_body, ">=", 1)
 
     args_func = assert_arg_type(ctx, func_body[0], 0, Funcall)
-    # validation of the args
-    func_args = [assert_arg_type(ctx, expr, ind, Word)
-                 for ind, expr in enumerate(args_func.args)]
+    func_args = make_args(ctx, args_func)  # validation of the args
 
     @Function.named_py("<unnamed_function>")
     def bex_func(ctx: EvalContext, exprs: List[Expr]) -> Expr:
         assert_args_amount(ctx, exprs, "==", len(func_args))
 
-        ctx.add_new_scope()
+        # evaluate arguments before entering a new scope
+        for arg, expr in zip(func_args, exprs):
+            if arg.evaluate:
+                expr = eval_expr(ctx, expr)
+            ctx.scope.namespace[arg.name] = expr
 
-        for word, expr in zip(func_args, exprs):
-            ctx.scope.namespace[word.value] = expr
+        ctx.add_new_scope()
 
         for expr in func_body:
             eval_expr(ctx, expr)  # use return when Return_s will be supported
