@@ -155,18 +155,28 @@ def bex_function(ctx: EvalContext, func_body: List[Expr]) -> Expr:
 
         ctx.add_new_scope()
 
+        result: Expr = Nothing
         for expr in func_body:
-            eval_expr(ctx, expr)  # use return when Return_s will be supported
+            if isinstance(expr, Funcall) and expr.name == bex_return.name:
+                assert_args_amount(ctx, expr.args, "==", 1, bex_return.name)
+                result = eval_expr(ctx, expr.args[0])
+                break
+            eval_expr(ctx, expr)
 
         ctx.pop_scope()
 
-        return Nothing
+        return result
     return bex_func
 
 
 @Function.py
 def bex_args(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     return Funcall("args", exprs)
+
+
+@Function.py
+def bex_return(ctx: EvalContext, exprs: List[Expr]) -> Expr:
+    raise RuntimeError("You can 'return' only inside functions")
 
 
 @Function.py
@@ -246,6 +256,7 @@ builtin_scope = Scope.from_funcions(
     bex_assign,
     bex_function,
     bex_args,
+    bex_return,
     bex_exec,
     bex_input,
     bex_repr,
