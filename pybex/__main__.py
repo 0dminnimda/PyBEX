@@ -1,6 +1,6 @@
 import argparse
 
-from . import EvalContext, interpret, parse_source, run_interactive_mode
+from pybex import EvalContext, interpret, parse_source, run_interactive_mode
 
 parser = argparse.ArgumentParser(
     prog="pybex", description="Run PyBEX programming language interpreter")
