@@ -84,25 +84,6 @@ def bex_range(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     return Funcall("range", exprs)
 
 
-def is_integer(num: Any) -> bool:
-    if isinstance(num, int):
-        return True
-    if isinstance(num, float):
-        return num.is_integer()
-    return False
-
-
-@Function.py
-def bex_is_integer(ctx: EvalContext, exprs: List[Expr]) -> Expr:
-    assert_args_amount(ctx, exprs, "==", 1)
-
-    arg = exprs[0]
-    if isinstance(arg, Number):
-        return Number(int(is_integer(arg.value)))
-
-    return Number(0)
-
-
 from math import fsum
 # from decimal import decimal
 
@@ -203,7 +184,6 @@ ctx = EvalContext(Scope.from_funcions(
     # my_func,
     # my_func2,
     bex_range,
-    bex_is_integer,
     bex_for,
 ))
 
