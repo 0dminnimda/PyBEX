@@ -48,6 +48,7 @@ _transformer = BEXTransformer(False)
 _parser = Lark.open(
     "grammar.lark", parser="lalr", transformer=_transformer,
     start=["single_input", "exec_input"], rel_to=__file__,
+    maybe_placeholders=False,
     # priority="invert"
     # debug=True,
     # propagate_positions=True,
