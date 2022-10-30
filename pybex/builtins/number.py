@@ -1,4 +1,5 @@
-from typing import Any, List
+from decimal import Decimal
+from typing import Any, List, Tuple, Union
 
 from ..classes import EvalContext, Expr, Funcall, Function, Nothing, Number, String
 from ..interpreter import assert_arg_type, assert_args_amount, eval_expr, eval_funcall
@@ -42,6 +43,36 @@ def bex_is_integer(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 
     result = isinstance(arg, Number) and is_integer(arg.value)
     return Number(int(result))
+
+
+def as_ratio(value: Union[int, float]) -> Tuple[int, int]:
+    string = Decimal(str(value + 0.0)).to_eng_string()
+    whole, _, decimal = string.rstrip("0").partition(".")
+    return int(whole + decimal), 10 ** len(decimal)
+
+    # string = str(value + .0)
+    # if "e" in string:
+    #     whole, _, exponent = string.partition("e")
+    #     scale = max(1, 10**int(exponent))
+    # else:
+    #     whole, _, decimal = string.partition(".")
+    #     scale = 10**len(decimal)
+
+    # whole_digits = min(len(str(int(value))), 17)
+    # decimal_digits = 17 - whole_digits
+    # whole, _, decimal = f"{value:.{decimal_digits}f}".rstrip("0").partition(".")
+    # return int(whole + decimal), scale
+
+
+# @Function.py
+# def bex_as_ratio(ctx: EvalContext, exprs: List[Expr]) -> Expr:
+#     assert_args_amount(ctx, exprs, "==", 1)
+
+#     arg = eval_expr(ctx, exprs[0])
+#     arg = assert_arg_type(ctx, arg, 0, Number)
+
+#     a, b = as_ratio(arg.value)
+#     return make_list(a, b)
 
 
 @Function.py
