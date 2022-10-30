@@ -76,6 +76,19 @@ def bex_add(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 
 
 @Function.py
+def bex_sub(ctx: EvalContext, exprs: List[Expr]) -> Expr:
+    assert_args_amount(ctx, exprs, "==", 2)
+
+    o1 = eval_expr(ctx, exprs[0])
+    o1 = assert_arg_type(ctx, o1, 0, Number)
+
+    o2 = eval_expr(ctx, exprs[1])
+    o2 = assert_arg_type(ctx, o2, 1, Number)
+
+    return Number(o1.value - o2.value)
+
+
+@Function.py
 def bex_mul(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     assert_args_amount(ctx, exprs, "==", 2)
 
@@ -105,6 +118,7 @@ number = [
     bex_int,
     bex_is_integer,
     bex_add,
+    bex_sub,
     bex_mul,
     bex_less,
 ]
