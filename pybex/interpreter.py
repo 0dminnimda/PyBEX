@@ -36,7 +36,6 @@ def raise_argument_error(number: int, funcname: str,
         f"argument number {number} for "
         f"`{funcname}` {message}"
         f" but found `{found}`")
-    # f"must be a {type.__name__}")
 
 
 # TODO: accept multiple types
@@ -71,21 +70,9 @@ def get_name(ctx: EvalContext, name: str) -> Expr:
 def eval_word(ctx: EvalContext, expr: Word) -> Any:
     return get_name(ctx, expr.value)
 
-    # try:
-    #     return ctx.scope.namespace[expr.value]
-    # except KeyError:
-    #     raise NameError(f"name {expr.value!r} is not defined") from None
-
-    # variable = ctx.namespase[expr.value]
-    # if not isinstance(variable, Function):
-    #     return variable
-    # raise TypeError(f"name {expr.value} should not be callable "
-    #                 "because it was used as Word")
-
 
 def eval_funcall(ctx: EvalContext, expr: Funcall) -> Expr:
     func = get_name(ctx, expr.name)
-    # func = assert_arg_type(ctx, get_name(ctx, expr.name), )
 
     if not isinstance(func, Function):
         raise TypeError(f"name {expr.name!r} in Funcall should be a Function "
@@ -93,10 +80,6 @@ def eval_funcall(ctx: EvalContext, expr: Funcall) -> Expr:
         # hasattr(obj, '__call__'):
         # raise TypeError(f"name {expr.name!r} should be callable "
         #                 "because it was used in the funcall")
-
-    # for ind, arg in enumerate(expr.args):
-    #     if isinstance(arg, Funcall) and arg.name == "eval":
-    #         expr.args[ind] = eval_funcall(ctx, arg)
 
     prev_funcall = ctx.last_funcall
     ctx.last_funcall = expr
