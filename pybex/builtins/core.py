@@ -1,8 +1,7 @@
 from typing import List, NamedTuple, NoReturn, Set
 
 from ..classes import EvalContext, Expr, Funcall, Function, Nothing, Word
-from ..interpreter import (assert_arg_type, assert_args_amount, eval_expr,
-                           eval_funcall)
+from ..interpreter import assert_arg_type, assert_args_amount, eval_expr, eval_funcall
 
 
 @Function.py
@@ -16,8 +15,9 @@ def valueof(ctx: EvalContext, value: Expr) -> Expr:
     cache: Set[str] = set()
     while isinstance(value, Word):
         if value.value in cache:
-            raise RecursionError("`valueof` encountered a reference cycle "
-                                 f"consisting of {cache}")
+            raise RecursionError(
+                "`valueof` encountered a reference cycle " f"consisting of {cache}"
+            )
         cache.add(value.value)
         value = eval_expr(ctx, value)
 
@@ -58,8 +58,13 @@ def bex_call(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     assert_args_amount(ctx, exprs, ">=", 1)
 
     if isinstance(exprs[0], Funcall):
-        arg1 = assert_arg_type(ctx, eval_funcall(ctx, exprs[0]), 0, Function,
-                               "should evaluate to a '{type.__name__}'")
+        arg1 = assert_arg_type(
+            ctx,
+            eval_funcall(ctx, exprs[0]),
+            0,
+            Function,
+            "should evaluate to a '{type.__name__}'",
+        )
     else:
         arg1 = assert_arg_type(ctx, valueof(ctx, exprs[0]), 0, Function)
     return arg1(ctx, exprs[1:])
