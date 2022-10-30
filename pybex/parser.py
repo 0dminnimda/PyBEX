@@ -53,28 +53,24 @@ _parser = Lark.open(
     # debug=True,
     # propagate_positions=True,
 )
-# with open(os.path.join(os.path.dirname(__file__), )) as f:
-#     PARSER = Lark(f)
-#     del f
 
 
 def parse_source(source: str, mode: str = "exec") -> Program:
     if mode == "exec":
         _transformer.interactive = False
         start = "exec_input"
-        # method = _parser.parse
     # elif mode == "eval":
     #     _transformer.interactive = False
     #     start = "expr"
     elif mode == "single":
         _transformer.interactive = True
         start = "single_input"
-        # method = _parser.parse_interactive
     else:
         raise ValueError("`mode` must be 'exec'"
                          # ", 'eval'"
                          " or 'single'")
 
+    # _parser.parse_interactive
     return _parser.parse(source, start=start)  # type: ignore
 
 
