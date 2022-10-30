@@ -50,19 +50,6 @@ def as_ratio(value: Union[int, float]) -> Tuple[int, int]:
     whole, _, decimal = string.rstrip("0").partition(".")
     return int(whole + decimal), 10 ** len(decimal)
 
-    # string = str(value + .0)
-    # if "e" in string:
-    #     whole, _, exponent = string.partition("e")
-    #     scale = max(1, 10**int(exponent))
-    # else:
-    #     whole, _, decimal = string.partition(".")
-    #     scale = 10**len(decimal)
-
-    # whole_digits = min(len(str(int(value))), 17)
-    # decimal_digits = 17 - whole_digits
-    # whole, _, decimal = f"{value:.{decimal_digits}f}".rstrip("0").partition(".")
-    # return int(whole + decimal), scale
-
 
 # @Function.py
 # def bex_as_ratio(ctx: EvalContext, exprs: List[Expr]) -> Expr:
