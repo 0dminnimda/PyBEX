@@ -84,8 +84,8 @@ def bex_for(ctx: EvalContext, exprs: List[Expr]) -> Expr:
         start, start_scale = as_ratio(start)
         stop, stop_scale = as_ratio(stop)
 
-        start *= int(scale / start_scale)
-        stop *= int(scale / stop_scale)
+        start *= scale // start_scale
+        stop *= scale // stop_scale
 
         while start < stop:
             namespace_setter(variable, Number(start / scale))
