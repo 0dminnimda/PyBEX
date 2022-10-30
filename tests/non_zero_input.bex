@@ -7,6 +7,12 @@ if(
     exec(
         assign(f, 0),
         say("zero input")
-    ))
+    )
+)
 
 say(f)
+
+if(
+    int(input()),
+    say("works only if input is non-zero")
+)
