@@ -79,19 +79,6 @@ def bex_for(ctx: EvalContext, exprs: List[Expr]) -> Expr:
             for expr in body:
                 eval_expr(ctx, expr)
             start += step
-    elif variable == "i2":
-        start, start_scale = as_ratio(start)
-        stop, stop_scale = as_ratio(stop)
-        step, scale = as_ratio(step)
-
-        start *= scale / start_scale
-        stop *= scale / stop_scale
-
-        while start < stop:
-            namespace_setter(variable, Number(start / scale))
-            for expr in body:
-                eval_expr(ctx, expr)
-            start += step
     else:
         start, start_scale = as_ratio(start)
         stop, stop_scale = as_ratio(stop)
