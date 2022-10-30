@@ -52,6 +52,7 @@ def bex_function(ctx: EvalContext, func_body: List[Expr]) -> Expr:
         ctx.pop_scope()
 
         return result
+
     return bex_func
 
 
