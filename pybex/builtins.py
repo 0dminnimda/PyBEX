@@ -10,14 +10,7 @@ from .interpreter import (assert_arg_type, assert_args_amount, eval_expr,
 def bex_say(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     expr: Expr
 
-    def print_expr(expr: Expr, **kwargs):
-        print(str(eval_expr(ctx, expr)), **kwargs)
-
-    for expr in exprs[:-1]:
-        print_expr(expr, end=" ")
-    for expr in exprs[-1:]:
-        print_expr(expr, end="")
-    print()
+    print(*(str(eval_expr(ctx, expr)) for expr in exprs))
 
     return Nothing
 
