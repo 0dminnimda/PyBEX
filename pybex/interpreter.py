@@ -75,8 +75,8 @@ def eval_funcall(ctx: EvalContext, expr: Funcall) -> Expr:
     func = get_name(ctx, expr.name)
 
     if not isinstance(func, Function):
-        raise TypeError(f"name {expr.name!r} in Funcall should be a Function "
-                        f"but found {type(func).__name__}")
+        raise TypeError(f"Funcalled name {expr.name!r} should be a 'Function' "
+                        f"but found '{type(func).__name__}'")
         # hasattr(obj, '__call__'):
         # raise TypeError(f"name {expr.name!r} should be callable "
         #                 "because it was used in the funcall")
