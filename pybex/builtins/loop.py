@@ -22,7 +22,6 @@ def bex_range(ctx: EvalContext, exprs: List[Expr]) -> Expr:
         assert_arg_type(ctx, arg, i, Number)
 
     if len(exprs) == 1:
-        # exprs = [Number(0), *exprs, Number(1)]
         exprs.insert(0, Number(0))
         exprs.append(Number(1))
     elif len(exprs) == 2:
@@ -37,7 +36,7 @@ def bex_range(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     if exprs[2] == 0:
         raise ValueError("range() arg 3 must not be zero")
 
-    return Funcall("range", exprs)
+    return Funcall(bex_range.name, exprs)
 
 
 @Function.py
