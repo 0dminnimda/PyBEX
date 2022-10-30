@@ -89,6 +89,10 @@ say(if(
 ))
 ```
 
+## Examples
+
+You can see examples in [`tests`](/tests) folder
+
 ---
 
 [Inspiration for the project](https://gitlab.com/tsoding/bex)
