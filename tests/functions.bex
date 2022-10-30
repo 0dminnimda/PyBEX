@@ -28,7 +28,7 @@ assign(factorial,
         args(eval(n)),
         return(if(less(n, 1),
             1,
-            mul(n, factorial(add(n, -1)))
+            mul(n, factorial(sub(n, 1)))
         ))
     )
 ) 
