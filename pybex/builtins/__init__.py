@@ -5,6 +5,7 @@ from .conditions import conditions
 from .core import core
 from .function import function
 from .inout import inout
+from .loop import loop
 from .number import number
 from .string import string
 
@@ -15,6 +16,7 @@ builtin_scope = Scope.from_funcions(
     *core,
     *function,
     *inout,
+    *loop,
     *number,
     *string,
 )
