@@ -140,25 +140,17 @@ def bex_for(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     if is_integer(step):
         while start < stop:
             namespace_setter(variable, Number(start))
-            bex_exec(ctx, body)
+            for expr in body:
+                eval_expr(ctx, expr)
             start += step
     else:
-        step += .0
-
-
-        # diff = round(
-        #     stop - start, max(
-        #         len(str(stop).split(".")[1]),
-        #         len(str(start).split(".")[1])
-        #     )
-        # )
-        r = str(step)
+        r = str(step + .0)
         if "e" in r:
-            step_pression = int(r.split("-")[1])
+            step_pression = int(r.partition("-")[2])
         else:
-            step_pression = len(r.split(".")[1])
-        start_pression = len(str(start).split(".")[1])
-        stop_pression = len(str(stop).split(".")[1])
+            step_pression = len(r.partition(".")[2])
+        start_pression = len(str(start).partition(".")[2])
+        stop_pression = len(str(stop).partition(".")[2])
 
         scale = 10**step_pression
         start_scale = 10**start_pression
@@ -170,53 +162,11 @@ def bex_for(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 
         while start < stop:
             namespace_setter(variable, Number(start / scale))
-            bex_exec(ctx, body)
+            for expr in body:
+                eval_expr(ctx, expr)
             start += step
-            # print(start)
 
-        # pression = 15 - len(str(int(stop)))
-        # # len(str(step).split(".")[1]) + len(str(int(start)))
-        # while start < stop:
-        #     namespace_setter(variable, Number(start))
-        #     bex_exec(ctx, body)
-        #     start = round(step + start, pression)
-
-        # i = 0
-        # num = start
-        # while num < stop:
-        #     namespace_setter(variable, Number(num))
-        #     bex_exec(ctx, body)
-        #     i += 1
-        #     num = start + step * i
-
-        # while start < stop:
-        #     namespace_setter(variable, Number(start))
-        #     bex_exec(ctx, body)
-        #     start = fsum((start, step))
-
-        # delta = stop - start
-        # fstep = delta / num
-        # for i in range(num):
-        #     ctx.scope.namespace[variable] = Number(
-        #         fsum((start, i * )))
-        #     bex_exec(ctx, exprs[2:])
-
-        # i = 0
-        # num = start
-        # while num < stop:
-        #     ctx.scope.namespace[variable] = Number(num)
-        #     bex_exec(ctx, exprs[2:])
-        #     i += 1
-        #     num = start + step * i
-        #     print(i, num, start, step * i)
-
-        # nm1 = n - 1
-        # nm1inv = 1.0 / nm1
-        # s = start*nm1
-        # for i in range(n):
-        #     yield nm1inv * (s - (start + stop)*i)
-
-    # remove variable in the end of the loop?
+    # XXX: remove variable in the end of the loop?
     # del ctx.scope.namespace[variable]
     return Nothing
 
