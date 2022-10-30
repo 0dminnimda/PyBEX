@@ -17,13 +17,19 @@ def bex_say(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 
 @Function.py
 def bex_if(ctx: EvalContext, exprs: List[Expr]) -> Expr:
-    assert_args_amount(ctx, exprs, "==", 3)
+    assert_args_amount(ctx, exprs, ">=", 2)
+    assert_args_amount(ctx, exprs, "<=", 3)
 
     test = assert_arg_type(ctx, eval_expr(ctx, exprs[0]),
                            0, Number, "should evaluate to a `{type.__name__}`")
 
-    ind = 1 + int(not test.value)  # True - 1, False - 2
-    return eval_expr(ctx, exprs[ind])
+    if test.value:
+        return eval_expr(ctx, exprs[1])
+
+    if len(exprs) == 3:
+        return eval_expr(ctx, exprs[2])
+
+    return Nothing
 
 
 @Function.py
