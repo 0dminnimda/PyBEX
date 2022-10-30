@@ -1,5 +1,4 @@
-from decimal import Decimal
-from typing import List, NamedTuple, NoReturn, Set, Tuple, Union
+from typing import List, NamedTuple, NoReturn, Set, cast
 
 from ..classes import EvalContext, Expr, Funcall, Function, Nothing, Number, Word
 from ..interpreter import (
@@ -10,7 +9,7 @@ from ..interpreter import (
     raise_argument_error,
 )
 from .core import valueof
-from .number import is_integer
+from .number import as_ratio, is_integer
 
 
 @Function.py
@@ -69,11 +68,7 @@ def bex_for(ctx: EvalContext, exprs: List[Expr]) -> Expr:
         "must have value that'll evaluate to a `{type.__name__}`",
     )
 
-    start, stop, step = [
-        arg.value
-        for arg in iterable_value.args
-        if isinstance(arg, Number)  # this line is only for typecheckers
-    ]
+    start, stop, step = [arg.value for arg in cast(List[Number], iterable_value.args)]
 
     body = exprs[2:]
     namespace_setter = ctx.scope.namespace.__setitem__
@@ -85,21 +80,12 @@ def bex_for(ctx: EvalContext, exprs: List[Expr]) -> Expr:
                 eval_expr(ctx, expr)
             start += step
     else:
-        r = str(step + 0.0)
-        if "e" in r:
-            step_pression = int(r.partition("-")[2])
-        else:
-            step_pression = len(r.partition(".")[2])
-        start_pression = len(str(start).partition(".")[2])
-        stop_pression = len(str(stop).partition(".")[2])
+        step, scale = as_ratio(step)
+        start, start_scale = as_ratio(start)
+        stop, stop_scale = as_ratio(stop)
 
-        scale = 10**step_pression
-        start_scale = 10**start_pression
-        stop_scale = 10**stop_pression
-
-        start = int(start * start_scale) * int(scale / start_scale)
-        stop = int(stop * stop_scale) * int(scale / stop_scale)
-        step = int(step * scale)
+        start *= int(scale / start_scale)
+        stop *= int(scale / stop_scale)
 
         while start < stop:
             namespace_setter(variable, Number(start / scale))
