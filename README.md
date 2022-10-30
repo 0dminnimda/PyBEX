@@ -91,7 +91,81 @@ say(if(
 
 ## Examples
 
-You can see examples in [`tests`](/tests) folder
+You can see more code examples in [`tests`](/tests) folder
+
+### How to add my own functions?
+
+Don't be scared, it's quite easy!
+
+Here you can see how to create two functions `this_is` and `ninja`:
+
+Run this code and see the output for yourself!
+
+```python
+from typing import List
+import random
+
+import pybex as bex
+
+
+bad_code = True
+
+
+@bex.Function.py  # bex_this_is.name == "this_is"
+def bex_this_is(ctx: bex.EvalContext, exprs: List[bex.Expr]) -> bex.Expr:
+    bex.assert_args_amount(ctx, exprs, "==", 0)
+
+    global bad_code
+    if bad_code:
+        print("sparta")
+    else:
+        print("no, this is patrick")
+    bad_code = not bad_code
+
+    return bex.Nothing
+
+
+BYTES = [108, 105, 103, 109, 97]
+
+
+@bex.Function.named_py("ninja")  # hidden_name.name == "ninja"
+def hidden_name(ctx: bex.EvalContext, exprs: List[bex.Expr]) -> bex.Expr:
+    bex.assert_args_amount(ctx, exprs, "==", 1)
+    arg = bex.assert_arg_type(ctx, exprs[0], 0, bex.String)
+
+    if arg.value == "has died of":
+        return bex.String(bytes(BYTES).decode())
+
+    as_list = list(arg.value)
+    random.shuffle(as_list)
+    return bex.String("".join(as_list))
+
+
+ctx = bex.EvalContext(bex.Scope.from_funcions(
+    bex_this_is,
+    hidden_name,
+))
+
+
+code = """
+this_is()
+this_is()
+this_is()
+this_is()
+this_is()
+this_is()
+
+say(ninja("12345"))
+say(ninja("superman"))
+say(ninja("has died of"))
+"""
+
+# interpret the source code
+bex.interpret(bex.parse_source(code), ctx)
+
+# or run an interactive console app
+# bex.run_interactive_mode(ctx)
+```
 
 ---
 
