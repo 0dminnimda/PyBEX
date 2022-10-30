@@ -8,6 +8,7 @@ from .inout import inout
 from .loop import loop
 from .number import number
 from .string import string
+from .timemodule import timemodule
 
 builtin_scope = Scope.from_funcions(
     *classtype,
@@ -19,4 +20,5 @@ builtin_scope = Scope.from_funcions(
     *loop,
     *number,
     *string,
+    *timemodule,
 )
