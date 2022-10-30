@@ -117,6 +117,7 @@ def bex_less(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 number = [
     bex_int,
     bex_is_integer,
+    # bex_as_ratio,
     bex_add,
     bex_sub,
     bex_mul,
