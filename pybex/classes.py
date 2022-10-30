@@ -13,8 +13,6 @@ except TypeError:
 
 @dataclass(**dt_args)
 class Scope:
-    # __slots__ = "namespace",
-
     namespace: Dict[str, "Expr"] = field(
         default_factory=dict)
 
@@ -69,15 +67,11 @@ class Expr:
 
 @dataclass(**dt_args)
 class Program:
-    # __slots__ = "body",
-
     body: List[Expr]
 
 
 @dataclass(**dt_args)
 class Number(Expr):
-    # __slots__ = "value",
-
     value: Union[int, float]
 
     def repr(self) -> str:
@@ -89,8 +83,6 @@ class Number(Expr):
 
 @dataclass(**dt_args)
 class String(Expr):
-    # __slots__ = "value",
-
     value: str
 
     def repr(self) -> str:
@@ -102,8 +94,6 @@ class String(Expr):
 
 @dataclass(**dt_args)
 class Word(Expr):
-    # __slots__ = "value",
-
     value: str
 
     def repr(self) -> str:
@@ -112,8 +102,6 @@ class Word(Expr):
 
 @dataclass(**dt_args)
 class Funcall(Expr):
-    # __slots__ = "name", "args"
-
     name: str
     args: List[Expr]
 
@@ -128,8 +116,6 @@ FuncT = TypeVar("FuncT", bound="Function")
 
 @dataclass(**dt_args)
 class Function(Expr):
-    # __slots__ = "name", "_func"
-
     name: str
     _func: PyFunctionT
 
@@ -166,8 +152,6 @@ class Function(Expr):
 
 
 class NothingType(Expr):
-    # __slots__ = ()
-
     def __repr__(self):
         return "Nothing"
 
@@ -176,7 +160,6 @@ Nothing = NothingType()
 
 
 class UnfinishedType(Expr):
-    # __slots__ = ()
     pass
 
 
