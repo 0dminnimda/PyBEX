@@ -10,7 +10,7 @@ from .interpreter import (assert_arg_type, assert_args_amount, eval_expr,
 def bex_say(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     expr: Expr
 
-    print(*(str(eval_expr(ctx, expr)) for expr in exprs))
+    print(*(eval_expr(ctx, expr).str() for expr in exprs))
 
     return Nothing
 
@@ -195,7 +195,7 @@ def bex_input(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 def bex_repr(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     assert_args_amount(ctx, exprs, "==", 1)
 
-    return String(repr(valueof(ctx, exprs[0])))
+    return String(valueof(ctx, exprs[0]).repr())
 
 
 @Function.py

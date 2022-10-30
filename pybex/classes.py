@@ -52,7 +52,11 @@ class EvalContext:
 # AST
 
 class Expr:
-    pass
+    def repr(self) -> str:
+        return repr(self)
+
+    def str(self) -> str:
+        return self.repr()
 
 
 @dataclass
@@ -64,10 +68,10 @@ class Program:
 class Number(Expr):
     value: Union[int, float]
 
-    def __repr__(self):
+    def repr(self) -> str:
         return repr(self.value)
 
-    def __str__(self):
+    def str(self) -> str:
         return str(self.value)
 
 
@@ -75,10 +79,10 @@ class Number(Expr):
 class String(Expr):
     value: str
 
-    def __repr__(self):
+    def repr(self) -> str:
         return repr(self.value)
 
-    def __str__(self):
+    def str(self) -> str:
         return self.value
 
 
@@ -86,11 +90,18 @@ class String(Expr):
 class Word(Expr):
     value: str
 
+    def repr(self) -> str:
+        return self.value
+
 
 @dataclass
 class Funcall(Expr):
     name: str
     args: List[Expr]
+
+    def repr(self) -> str:
+        args = ", ".join((arg.repr() for arg in self.args))
+        return f"{self.name}({args})"
 
 
 PyFunctionT = Callable[[EvalContext, List[Expr]], Expr]
@@ -124,8 +135,11 @@ class Function(Expr):
     def __call__(self, ctx: EvalContext, exprs: List[Expr]) -> Expr:
         return self._func(ctx, exprs)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Function(name={self.name!r})"
+
+    def repr(self) -> str:
+        return f"<function {self.name!r}>"
 
 
 # AST/code Constants

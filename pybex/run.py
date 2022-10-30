@@ -93,4 +93,4 @@ def run_interactive_mode(ctx: EvalContext = EvalContext(),
         buffer.clear()
         more = 0
         if result is not Nothing:
-            write(repr(result) + "\n")
+            write(result.repr() + "\n")
