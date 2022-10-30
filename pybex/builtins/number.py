@@ -1,9 +1,7 @@
 from typing import List
 
-from ..classes import (EvalContext, Expr, Funcall, Function, Nothing, Number,
-                       String)
-from ..interpreter import (assert_arg_type, assert_args_amount, eval_expr,
-                           eval_funcall)
+from ..classes import EvalContext, Expr, Funcall, Function, Nothing, Number, String
+from ..interpreter import assert_arg_type, assert_args_amount, eval_expr, eval_funcall
 from .core import valueof
 
 
@@ -24,7 +22,8 @@ def bex_int(ctx: EvalContext, exprs: List[Expr]) -> Expr:
 
     raise TypeError(
         "int() argument must be a String, Nothing "
-        f"or a Number, not '{type(arg1).__name__}'")
+        f"or a Number, not '{type(arg1).__name__}'"
+    )
 
 
 @Function.py
@@ -66,9 +65,4 @@ def bex_less(ctx: EvalContext, exprs: List[Expr]) -> Expr:
     return Number(o1.value < o2.value)
 
 
-number = [
-    bex_int,
-    bex_add,
-    bex_mul,
-    bex_less
-]
+number = [bex_int, bex_add, bex_mul, bex_less]
