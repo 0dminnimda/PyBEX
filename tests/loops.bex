@@ -1,0 +1,5 @@
+say("You can iterate on integers as usual")
+for(i, range(0, 10, 1), say(i))
+
+say("but also iterate on floats with no loss")
+for(i, range(0, 6.90001, .23), say(i))
